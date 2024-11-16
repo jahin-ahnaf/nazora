@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Word Shuffler</title>
+  <style>
+    body {
+      font-family: Consolas, monospace;
+      background-color: black;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .title {
+      font-size: 24px;
+      color: lime;
+    }
+
+    .word {
+      font-size: 36px;
+      color: red;
+      margin: 20px 0;
+    }
+
+    .attempts {
+      font-size: 18px;
+      margin: 10px 0;
+    }
+
+    .result {
+      font-size: 20px;
+      margin: 20px 0;
+    }
+
+    .button {
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      cursor: pointer;
+      color: black;
+    }
+
+    .start {
+      background-color: lime;
+    }
+
+    .play-again {
+      background-color: orange;
+      display: none;
+    }
+
+    .feedback {
+      background-color: blue;
+      color: white;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1 class="title">Word Shuffler</h1>
+  <div class="word" id="word">aanorz</div>
+  <div class="attempts" id="attempts">Attempts: 0</div>
+  <div class="result" id="result"></div>
+  <button class="button start" id="start-button" onclick="startShuffling()">Start</button>
+  <button class="button play-again" id="play-again-button" onclick="resetGame()">Play Again</button>
+  <button class="button feedback" id="feedback-button" onclick="giveFeedback()">Give Feedback</button>
+
+  <script>
+    let word = "aanorz";
+    let attempts = 0;
+    let isShuffling = false;
+
+    function shuffleString(str) {
+      return str.split('').sort(() => 0.5 - Math.random()).join('');
+    }
+
+    function startShuffling() {
+      if (isShuffling) return;
+
+      isShuffling = true;
+      document.getElementById('start-button').disabled = true;
+      document.getElementById('play-again-button').style.display = "none";
+      document.getElementById('feedback-button').style.display = "none";
+
+      const wordElement = document.getElementById('word');
+      const attemptsElement = document.getElementById('attempts');
+      const resultElement = document.getElementById('result');
+      
+      resultElement.textContent = "";
+      wordElement.style.color = "red";
+
+      const interval = setInterval(() => {
+        if (word === "nazora") {
+          clearInterval(interval);
+          wordElement.style.color = "green";
+          evaluateResult();
+          isShuffling = false;
+          document.getElementById('play-again-button').style.display = "inline-block";
+          document.getElementById('feedback-button').style.display = "inline-block";
+        } else {
+          word = shuffleString(word);
+          attempts++;
+          wordElement.textContent = word;
+          attemptsElement.textContent = `Attempts: ${attempts}`;
+        }
+      }, 20); // Simulates the "hacking effect"
+    }
+
+    function evaluateResult() {
+      const resultElement = document.getElementById('result');
+      let result = "";
+      let color = "";
+
+      if (attempts < 500) {
+        result = "That was EZ :D";
+        color = "lime";
+      } else if (attempts < 1000) {
+        result = "Not that hard :)";
+        color = "blue";
+      } else if (attempts < 3000) {
+        result = "Was hard...";
+        color = "yellow";
+      } else {
+        result = "Damn! That was not that hard ;)";
+        color = "red";
+      }
+
+      resultElement.textContent = result;
+      resultElement.style.color = color;
+    }
+
+    function resetGame() {
+      word = "aanorz";
+      attempts = 0;
+
+      document.getElementById('word').textContent = word;
+      document.getElementById('word').style.color = "red";
+      document.getElementById('attempts').textContent = `Attempts: ${attempts}`;
+      document.getElementById('result').textContent = "";
+
+      document.getElementById('start-button').disabled = false;
+      document.getElementById('play-again-button').style.display = "none";
+      document.getElementById('feedback-button').style.display = "none";
+    }
+
+    function giveFeedback() {
+      const feedback = confirm("Did you like it?");
+      if (feedback) {
+        alert("Thanks <3");
+      } else {
+        alert("stht :(");
+      }
+    }
+  </script>
+</body>
+</html>
